@@ -14,11 +14,10 @@ class PublicBlogView(APIView):
             blogs = Blog.objects.all().order_by('?')
             if request.GET.get('search'):
                 search = request.GET.get('search')
-                blogs = Blog.objects.filter(Q(title=search) | Q(blog_text=search))
+                blogs = Blog.objects.filter(Q(title__icontains=search) | Q(blog_text__icontains=search))
             page_number=request.GET.get('page',1)
             paginator = Paginator(blogs,1)
             serializer = BlogSerializer(paginator.page(page_number), many=True)
-            
             
             return Response({
                 'status': True,
@@ -35,14 +34,12 @@ class PublicBlogView(APIView):
 class BlogView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
-
     def get(self, request):
         try:
             blogs = Blog.objects.filter(user=request.user)
             if request.GET.get('search'):
                 search = request.GET.get('search')
                 blogs = Blog.objects.filter(Q(title=search) | Q(blog_text=search))
-
             serializer = BlogSerializer(blogs, many=True)
             return Response({
                 'status': True,
@@ -118,7 +115,6 @@ class BlogView(APIView):
                 'error': str(e)
             }, status=status.HTTP_400_BAD_REQUEST)
             
-    
     def delete(self,request):
         try:
             data = request.data
