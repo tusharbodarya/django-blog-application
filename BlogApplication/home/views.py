@@ -37,6 +37,14 @@ class BlogView(APIView):
     def get(self, request):
         try:
             blogs = Blog.objects.filter(user=request.user)
+            # blogs = Blog.objects.values_list('title','blog_text')
+            # blogs = Blog.objects.select_related(user=request.user)
+            # blogs = Blog.objects.prefetch_related(user=request.user)
+            # uname=['aka125','aka12556']
+            # blogs = Blog.objects.filter(user__username__in=uname)
+            # blogs = Blog.objects.exclude(user__username__in=uname)
+            # blogs = Blog.objects.exclude(user__username__icontains="J")
+            # blogs.exists()
             if request.GET.get('search'):
                 search = request.GET.get('search')
                 blogs = Blog.objects.filter(Q(title=search) | Q(blog_text=search))
