@@ -36,10 +36,13 @@ class BlogView(APIView):
     authentication_classes = [JWTAuthentication]
     def get(self, request):
         try:
-            blogs = Blog.objects.filter(user=request.user)
+            # blogs = Blog.objects.filter(user=request.user)
             # blogs = Blog.objects.values_list('title','blog_text')
-            # blogs = Blog.objects.select_related(user=request.user)
-            # blogs = Blog.objects.prefetch_related(user=request.user)
+            # blogs = Blog.objects.select_related()
+            blogs = Blog.objects.prefetch_related()
+            print("*************************")
+            print(blogs)
+            print("*************************")
             # uname=['aka125','aka12556']
             # blogs = Blog.objects.filter(user__username__in=uname)
             # blogs = Blog.objects.exclude(user__username__in=uname)
